@@ -38,20 +38,22 @@ export default function TakeTest() {
 
   useEffect(() => {
     if (timeLeft === 0 && !submitted && attemptId) {
-      handleSubmit();
+      handleSubmit(true);
     }
-  }, [timeLeft]);
+  }, [timeLeft, submitted, attemptId]);
 
   const handleAnswer = (questionId, answer) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
   };
 
-  const handleSubmit = async () => {
-    if (!window.confirm("Submit test?")) return;
+  const handleSubmit = async (isAutoSubmit = false) => {
+    if (!isAutoSubmit && !window.confirm("Submit test?")) return;
     try {
       await submitAttempt(attemptId, answers);
       setSubmitted(true);
-      alert("Test submitted! View results in My Results.");
+      alert(isAutoSubmit
+        ? "Time is up. Test auto-submitted! View results in My Results."
+        : "Test submitted! View results in My Results.");
       navigate("/my-results");
     } catch (err) {
       console.error(err);

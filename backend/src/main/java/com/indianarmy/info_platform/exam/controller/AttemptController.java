@@ -3,6 +3,8 @@ package com.indianarmy.info_platform.exam.controller;
 import com.indianarmy.info_platform.exam.entity.Attempt;
 import com.indianarmy.info_platform.exam.service.AttemptService;
 import com.indianarmy.info_platform.security.JwtService;
+import com.indianarmy.info_platform.user.entity.User;
+import com.indianarmy.info_platform.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +20,12 @@ public class AttemptController {
 
     private final AttemptService attemptService;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN','ASPIRANT')")
     @PostMapping("/start")
     public Attempt startAttempt(@RequestParam Long testId, @RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.substring(7);
-        String email = jwtService.extractEmail(token);
-        // Get user by email (you'll need to add this method to UserRepository)
-        Long userId = 1L; // TODO: Get actual user ID from email
+        Long userId = extractUserId(authHeader);
         return attemptService.startAttempt(userId, testId);
     }
 
@@ -38,9 +38,7 @@ public class AttemptController {
     @PreAuthorize("hasRole('ASPIRANT')")
     @GetMapping("/my-attempts")
     public List<Attempt> getMyAttempts(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.substring(7);
-        String email = jwtService.extractEmail(token);
-        Long userId = 1L; // TODO: Get actual user ID from email
+        Long userId = extractUserId(authHeader);
         return attemptService.getUserAttempts(userId);
     }
     @PreAuthorize("hasRole('ADMIN')")
@@ -53,5 +51,16 @@ public class AttemptController {
     @GetMapping("/test/{testId}/results")
     public List<Attempt> getTestResults(@PathVariable Long testId) {
         return attemptService.getAttemptsByTest(testId);
+    }
+
+    private Long extractUserId(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid authorization header");
+        }
+        String token = authHeader.substring(7);
+        String email = jwtService.extractEmail(token);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found for token"));
+        return user.getId();
     }
 }

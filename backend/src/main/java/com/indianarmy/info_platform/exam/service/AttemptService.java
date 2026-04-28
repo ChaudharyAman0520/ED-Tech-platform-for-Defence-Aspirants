@@ -27,9 +27,18 @@ public class AttemptService {
 
     @Transactional
     public Attempt startAttempt(Long userId, Long testId) {
+        return attemptRepository.findByUserIdAndTestIdAndCompletedAtIsNull(userId, testId)
+                .orElseGet(() -> createAttempt(userId, testId));
+    }
+
+    private Attempt createAttempt(Long userId, Long testId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Test test = testService.getTestById(testId);
+
+        if (test.getQuestions() == null || test.getQuestions().isEmpty()) {
+            throw new RuntimeException("Test has no questions");
+        }
 
         Attempt attempt = Attempt.builder()
                 .user(user)
@@ -44,6 +53,10 @@ public class AttemptService {
     public Attempt submitAttempt(Long attemptId, Map<Long, String> answers) {
         Attempt attempt = attemptRepository.findById(attemptId)
                 .orElseThrow(() -> new RuntimeException("Attempt not found"));
+
+        if (attempt.getCompletedAt() != null) {
+            throw new RuntimeException("Attempt already submitted");
+        }
 
         int totalMarks = 0;
         int earnedMarks = 0;
@@ -67,7 +80,7 @@ public class AttemptService {
             if (isCorrect) earnedMarks += question.getMarks();
         }
 
-        int percentage = (int) ((double) earnedMarks / totalMarks * 100);
+        int percentage = totalMarks == 0 ? 0 : (int) ((double) earnedMarks / totalMarks * 100);
         attempt.setScore(earnedMarks);
         attempt.setPercentage(percentage);
         attempt.setCompletedAt(LocalDateTime.now());
