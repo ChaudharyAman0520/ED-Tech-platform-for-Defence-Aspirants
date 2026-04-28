@@ -6,6 +6,7 @@ import com.indianarmy.info_platform.ssb.repository.SSBResourceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,20 +17,24 @@ public class SSBResourceService {
 
     public List<SSBResourceResponse> getAll() {
 
-        return repository.findAll()
-                .stream()
-                .map(r -> new SSBResourceResponse(
-                        r.getId(),
-                        r.getTitle(),
-                        r.getDescription(),
-                        r.getUrl(),
-                        r.getResourceType()
-                ))
-                .toList();
+        List<SSBResource> list = repository.findAll();
+        List<SSBResourceResponse> responseList = new ArrayList<>();
+
+        for (SSBResource r : list) {
+            SSBResourceResponse response = new SSBResourceResponse(
+                    r.getId(),
+                    r.getTitle(),
+                    r.getDescription(),
+                    r.getUrl(),
+                    r.getResourceType()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
     public SSBResource create(SSBResource resource) {
         return repository.save(resource);
     }
-
 }

@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/operations")
 @CrossOrigin(origins = "http://localhost:5173")
+@Tag(name = "Military Operations", description = "APIs for Indian military operations")
 public class MilitaryOperationController {
 
     private final MilitaryOperationService service;
@@ -18,20 +22,21 @@ public class MilitaryOperationController {
         this.service = service;
     }
 
-    // PUBLIC (both admin & aspirant)
+    @Operation(summary = "Get all military operations")
     @PreAuthorize("hasAnyRole('ADMIN','ASPIRANT')")
     @GetMapping
     public List<MilitaryOperation> getAllOperations() {
         return service.getAllOperations();
     }
 
+    @Operation(summary = "Get operation by ID")
     @PreAuthorize("hasAnyRole('ADMIN','ASPIRANT')")
     @GetMapping("/{id}")
     public MilitaryOperation getOperationById(@PathVariable Long id) {
         return service.getOperationById(id);
     }
 
-    // ADMIN ONLY
+    @Operation(summary = "Create new military operation")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public MilitaryOperation createOperation(
@@ -39,6 +44,7 @@ public class MilitaryOperationController {
         return service.save(operation);
     }
 
+    @Operation(summary = "Get featured military operations")
     @PreAuthorize("hasAnyRole('ADMIN','ASPIRANT')")
     @GetMapping("/featured")
     public List<MilitaryOperation> getFeaturedOperations() {

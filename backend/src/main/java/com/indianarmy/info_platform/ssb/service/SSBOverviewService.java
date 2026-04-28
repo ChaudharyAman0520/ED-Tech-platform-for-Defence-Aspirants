@@ -6,6 +6,7 @@ import com.indianarmy.info_platform.ssb.repository.SSBOverviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,20 +17,24 @@ public class SSBOverviewService {
 
     public List<SSBOverviewResponse> getAll() {
 
-        return repository.findAll()
-                .stream()
-                .map(o -> new SSBOverviewResponse(
-                        o.getId(),
-                        o.getIntroduction(),
-                        o.getPurpose(),
-                        o.getSelectionProcessSummary(),
-                        o.getOfficialWebsite()
-                ))
-                .toList();
+        List<SSBOverview> list = repository.findAll();
+        List<SSBOverviewResponse> responseList = new ArrayList<>();
+
+        for (SSBOverview o : list) {
+            SSBOverviewResponse response = new SSBOverviewResponse(
+                    o.getId(),
+                    o.getIntroduction(),
+                    o.getPurpose(),
+                    o.getSelectionProcessSummary(),
+                    o.getOfficialWebsite()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
     public SSBOverview create(SSBOverview overview) {
         return repository.save(overview);
     }
-
 }

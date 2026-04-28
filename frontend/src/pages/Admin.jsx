@@ -11,51 +11,51 @@ import TestSimulator from "./TestSimulator";
 import { CadetDatabase, AnalyticsPage, ContentOps, SettingsPage } from "./AdminPages";
 
 function renderPage(page, navigate) {
-switch (page) {
-case "dashboard": return <AdminDashboard onNavigate={navigate} />;
-case "questions": return <QuestionArsenal />;
-case "tests": return <TestSimulator />;
-case "aspirants": return <CadetDatabase />;
-case "analytics": return <AnalyticsPage />;
-case "content": return <ContentOps />;
-case "settings": return <SettingsPage />;
-default: return <AdminDashboard onNavigate={navigate} />;
-}
+  switch (page) {
+    case "dashboard": return <AdminDashboard onNavigate={navigate} />;
+    case "questions": return <QuestionArsenal />;
+    case "tests": return <TestSimulator />;
+    case "aspirants": return <CadetDatabase />;
+    case "analytics": return <AnalyticsPage />;
+    case "content": return <ContentOps />;
+    case "settings": return <SettingsPage />;
+    default: return <AdminDashboard onNavigate={navigate} />;
+  }
 }
 
 export default function Admin() {
-const [activePage, setActivePage] = useState("dashboard");
-const navigate = useNavigate();
+  const [activePage, setActivePage] = useState("dashboard");
+  const navigate = useNavigate();
 
-useEffect(() => {
-const user = JSON.parse(localStorage.getItem("user"));
-const token = localStorage.getItem("token");
-
-
-if (!token || !user) {
-  navigate("/login");
-  return;
-}
-
-if (user.role !== "ADMIN") {
-  navigate("/"); 
-  return;
-}
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
 
 
-}, [navigate]);
+    if (!token || !user) {
+      navigate("/login");
+      return;
+    }
 
-const handleNavigate = (page) => {
-if (page === "logout") {
-localStorage.removeItem("token");
-localStorage.removeItem("user");
-navigate("/login");
-return;
-}
-setActivePage(page);
-};
+    if (user.role !== "ADMIN") {
+      navigate("/");
+      return;
+    }
 
-return ( <AdminLayout activePage={activePage} onNavigate={handleNavigate}>
-{renderPage(activePage, handleNavigate)} </AdminLayout>
-);
+
+  }, [navigate]);
+
+  const handleNavigate = (page) => {
+    if (page === "logout") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+      return;
+    }
+    setActivePage(page);
+  };
+
+  return ( <AdminLayout activePage={activePage} onNavigate={handleNavigate}>
+        {renderPage(activePage, handleNavigate)} </AdminLayout>
+  );
 }

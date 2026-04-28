@@ -5,10 +5,10 @@ import com.indianarmy.info_platform.nda.entity.NDAEligibility;
 import com.indianarmy.info_platform.nda.repository.NDAEligibilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,27 +18,37 @@ public class NDAEligibilityService {
 
     public List<NDAEligibilityResponse> getAll() {
 
-        return repository.findAll()
-                .stream()
-                .map(e -> new NDAEligibilityResponse(
-                        e.getId(),
-                        e.getMinAge(),
-                        e.getMaxAge(),
-                        e.getEducationRequirement(),
-                        e.getNationality(),
-                        e.getMaritalStatus()
-                ))
-                .toList();
+        List<NDAEligibility> list = repository.findAll();
+        List<NDAEligibilityResponse> responseList = new ArrayList<>();
+
+        for (NDAEligibility e : list) {
+            NDAEligibilityResponse response = new NDAEligibilityResponse(
+                    e.getId(),
+                    e.getMinAge(),
+                    e.getMaxAge(),
+                    e.getEducationRequirement(),
+                    e.getNationality(),
+                    e.getMaritalStatus()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
-    public NDAEligibility create(@RequestBody NDAEligibility eligibility) {
+
+    public NDAEligibility create(NDAEligibility eligibility) {
         return repository.save(eligibility);
     }
 
-    public NDAEligibility update(@PathVariable Long id,
-                                 @RequestBody NDAEligibility updated) {
+    public NDAEligibility update(Long id, NDAEligibility updated) {
 
-        NDAEligibility existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
+        Optional<NDAEligibility> optional = repository.findById(id);
+
+        if (!optional.isPresent()) {
+            throw new RuntimeException("Not found");
+        }
+
+        NDAEligibility existing = optional.get();
 
         existing.setMinAge(updated.getMinAge());
         existing.setMaxAge(updated.getMaxAge());
@@ -49,7 +59,7 @@ public class NDAEligibilityService {
         return repository.save(existing);
     }
 
-    public void delete(@PathVariable Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

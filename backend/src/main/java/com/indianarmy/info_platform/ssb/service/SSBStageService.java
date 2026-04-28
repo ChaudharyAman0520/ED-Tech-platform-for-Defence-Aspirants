@@ -6,6 +6,7 @@ import com.indianarmy.info_platform.ssb.repository.SSBStageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,19 +17,23 @@ public class SSBStageService {
 
     public List<SSBStageResponse> getAllStages() {
 
-        return repository.findAll()
-                .stream()
-                .map(stage -> new SSBStageResponse(
-                        stage.getId(),
-                        stage.getStageName(),
-                        stage.getDayNumber(),
-                        stage.getDescription()
-                ))
-                .toList();
+        List<SSBStage> list = repository.findAll();
+        List<SSBStageResponse> responseList = new ArrayList<>();
+
+        for (SSBStage stage : list) {
+            SSBStageResponse response = new SSBStageResponse(
+                    stage.getId(),
+                    stage.getStageName(),
+                    stage.getDayNumber(),
+                    stage.getDescription()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
     public SSBStage createStage(SSBStage stage) {
         return repository.save(stage);
     }
-
 }

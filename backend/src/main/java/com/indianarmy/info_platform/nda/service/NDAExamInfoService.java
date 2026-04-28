@@ -5,10 +5,10 @@ import com.indianarmy.info_platform.nda.entity.NDAExamInfo;
 import com.indianarmy.info_platform.nda.repository.NDAExamInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,27 +18,36 @@ public class NDAExamInfoService {
 
     public List<NDAExamInfoResponse> getAll() {
 
-        return repository.findAll()
-                .stream()
-                .map(info -> new NDAExamInfoResponse(
-                        info.getId(),
-                        info.getIntroduction(),
-                        info.getConductingBody(),
-                        info.getOfficialWebsite(),
-                        info.getExamFrequency()
-                ))
-                .toList();
+        List<NDAExamInfo> list = repository.findAll();
+        List<NDAExamInfoResponse> responseList = new ArrayList<>();
+
+        for (NDAExamInfo info : list) {
+            NDAExamInfoResponse response = new NDAExamInfoResponse(
+                    info.getId(),
+                    info.getIntroduction(),
+                    info.getConductingBody(),
+                    info.getOfficialWebsite(),
+                    info.getExamFrequency()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
-    public NDAExamInfo create(@RequestBody NDAExamInfo info) {
+    public NDAExamInfo create(NDAExamInfo info) {
         return repository.save(info);
     }
 
-    public NDAExamInfo update(@PathVariable Long id,
-                              @RequestBody NDAExamInfo updated) {
+    public NDAExamInfo update(Long id, NDAExamInfo updated) {
 
-        NDAExamInfo existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
+        Optional<NDAExamInfo> optional = repository.findById(id);
+
+        if (!optional.isPresent()) {
+            throw new RuntimeException("Not found");
+        }
+
+        NDAExamInfo existing = optional.get();
 
         existing.setIntroduction(updated.getIntroduction());
         existing.setConductingBody(updated.getConductingBody());
@@ -48,7 +57,7 @@ public class NDAExamInfoService {
         return repository.save(existing);
     }
 
-    public void delete(@PathVariable Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

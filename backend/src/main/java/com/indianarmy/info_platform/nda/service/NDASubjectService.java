@@ -6,7 +6,9 @@ import com.indianarmy.info_platform.nda.repository.NDASubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,25 +18,37 @@ public class NDASubjectService {
 
     public List<NDASubjectResponse> getAllSubjects() {
 
-        return repository.findAll()
-                .stream()
-                .map(subject -> new NDASubjectResponse(
-                        subject.getId(),
-                        subject.getName(),
-                        subject.getTotalMarks(),
-                        subject.getDurationMinutes(),
-                        subject.getSyllabusText()
-                ))
-                .toList();
+        List<NDASubject> list = repository.findAll();
+        List<NDASubjectResponse> responseList = new ArrayList<>();
+
+        for (NDASubject subject : list) {
+            NDASubjectResponse response = new NDASubjectResponse(
+                    subject.getId(),
+                    subject.getName(),
+                    subject.getTotalMarks(),
+                    subject.getDurationMinutes(),
+                    subject.getSyllabusText()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
+
     public NDASubject getSubjectById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subject not found with id: " + id));
+
+        Optional<NDASubject> optional = repository.findById(id);
+
+        if (!optional.isPresent()) {
+            throw new RuntimeException("Subject not found with id: " + id);
+        }
+
+        return optional.get();
     }
 
     public NDASubject createSubject(NDASubject subject) {
 
-        if (subject.getName() == null || subject.getName().isBlank()) {
+        if (subject.getName() == null || subject.getName().trim().isEmpty()) {
             throw new RuntimeException("Subject name cannot be empty");
         }
 
@@ -43,8 +57,13 @@ public class NDASubjectService {
 
     public NDASubject updateSubject(Long id, NDASubject updated) {
 
-        NDASubject existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subject not found with id: " + id));
+        Optional<NDASubject> optional = repository.findById(id);
+
+        if (!optional.isPresent()) {
+            throw new RuntimeException("Subject not found with id: " + id);
+        }
+
+        NDASubject existing = optional.get();
 
         existing.setName(updated.getName());
         existing.setTotalMarks(updated.getTotalMarks());

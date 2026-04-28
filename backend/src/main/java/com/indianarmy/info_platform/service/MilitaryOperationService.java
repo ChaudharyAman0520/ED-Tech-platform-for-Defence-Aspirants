@@ -5,6 +5,7 @@ import com.indianarmy.info_platform.repository.MilitaryOperationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MilitaryOperationService {
@@ -15,22 +16,24 @@ public class MilitaryOperationService {
         this.repository = repository;
     }
 
-    // List page
     public List<MilitaryOperation> getAllOperations() {
         return repository.findAll();
     }
 
-    // Detail page
     public MilitaryOperation getOperationById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Operation not found with id: " + id));
+        Optional<MilitaryOperation> optionalOperation = repository.findById(id);
+
+        if (optionalOperation.isPresent()) {
+            return optionalOperation.get();
+        } else {
+            throw new RuntimeException("Operation not found with id: " + id);
+        }
     }
+
     public List<MilitaryOperation> getFeaturedOperations() {
         return repository.findByFeaturedTrue();
     }
 
-    // Data insertion
     public MilitaryOperation save(MilitaryOperation operation) {
         return repository.save(operation);
     }

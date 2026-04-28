@@ -5,8 +5,8 @@ import com.indianarmy.info_platform.nda.entity.NDAPYQPaper;
 import com.indianarmy.info_platform.nda.repository.NDAPYQPaperRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,27 +17,48 @@ public class NDAPYQPaperService {
 
     public List<NDAPYQPaperResponse> getAll() {
 
-        return repository.findAll()
-                .stream()
-                .map(pyq -> new NDAPYQPaperResponse(
-                        pyq.getId(),
-                        pyq.getYear(),
-                        pyq.getSession(),
-                        pyq.getPdfUrl(),
-                        pyq.getSubject().getName()
-                ))
-                .toList();
+        List<NDAPYQPaper> list = repository.findAll();
+        List<NDAPYQPaperResponse> responseList = new ArrayList<>();
+
+        for (NDAPYQPaper pyq : list) {
+            NDAPYQPaperResponse response = new NDAPYQPaperResponse(
+                    pyq.getId(),
+                    pyq.getYear(),
+                    pyq.getSession(),
+                    pyq.getPdfUrl(),
+                    pyq.getSubject().getName()
+            );
+            responseList.add(response);
+        }
+
+        return responseList;
     }
-    public NDAPYQPaper create(@RequestBody NDAPYQPaper paper){
+
+    public NDAPYQPaper create(NDAPYQPaper paper) {
         return repository.save(paper);
     }
 
     public List<NDAPYQPaper> getByYear(Integer year) {
-        return repository.findByYear(year);
+
+        List<NDAPYQPaper> list = repository.findByYear(year);
+        List<NDAPYQPaper> result = new ArrayList<>();
+
+        for (NDAPYQPaper pyq : list) {
+            result.add(pyq);
+        }
+
+        return result;
     }
 
     public List<NDAPYQPaper> getBySubject(Long subjectId) {
-        return repository.findBySubjectId(subjectId);
-    }
 
+        List<NDAPYQPaper> list = repository.findBySubjectId(subjectId);
+        List<NDAPYQPaper> result = new ArrayList<>();
+
+        for (NDAPYQPaper pyq : list) {
+            result.add(pyq);
+        }
+
+        return result;
+    }
 }
