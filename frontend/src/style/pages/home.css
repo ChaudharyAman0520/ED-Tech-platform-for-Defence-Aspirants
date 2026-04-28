@@ -1,0 +1,219 @@
+/* Home Page Specific */
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 60px;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(201, 168, 76, 0.06) 0%, transparent 65%),
+              radial-gradient(ellipse at 80% 80%, rgba(8, 20, 40, 0.9) 0%, transparent 60%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+}
+
+/* Badge */
+.badge-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.badge-line {
+  flex: 0 0 150px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
+
+.badge {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  padding: 5px 14px;
+}
+
+/* Hero Title */
+.hero-title {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 28px;
+}
+
+.title-line-1 {
+  font-family: var(--font-ui);
+  font-size: 1.3rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.title-line-2 {
+  font-family: var(--font-display);
+  font-size: 6rem;
+  line-height: 0.9;
+  color: var(--text-primary);
+}
+
+.title-line-2 em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.title-line-3 {
+  font-family: var(--font-display);
+  font-size: 6rem;
+  line-height: 0.9;
+  -webkit-text-stroke: 1px rgba(232, 234, 240, 0.3);
+  color: transparent;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+.hero-sub strong {
+  color: var(--gold-light);
+}
+
+.hero-image {
+  position: absolute;
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 500px;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
+  filter: brightness(0.8);
+}
+
+/* Cards Section */
+.section-cards {
+  padding: 100px 60px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 30px;
+}
+
+.section-header h2 span {
+  color: var(--gold);
+}
+
+/* Quote Banner */
+.quote-banner {
+  background: var(--bg-deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 70px 60px;
+  text-align: center;
+}
+
+.quote-inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.quote-mark {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  color: var(--gold);
+  opacity: 0.4;
+  line-height: 0;
+  display: block;
+  margin-bottom: -10px;
+}
+
+blockquote {
+  font-family: var(--font-ui);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+cite {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+/* Footer */
+.footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 48px 60px;
+  text-align: center;
+}
+
+.footer-motto {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.footer-copy {
+  font-size: 0.78rem;
+  color: #3a4455;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-image img {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero-image { display: none; }
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 40px 20px; }
+  .hero-title .title-line-2,
+  .hero-title .title-line-3 { font-size: 3rem; }
+  .section-cards { padding: 40px 20px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .quote-banner { padding: 40px 20px; }
+  .footer { padding: 30px 20px; }
+}

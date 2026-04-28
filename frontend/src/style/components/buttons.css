@@ -1,0 +1,180 @@
+/* Button Styles */
+
+.btn-login {
+  background: var(--gold);
+  color: #0a0f1c;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 20px;
+  transition: background 0.2s;
+}
+
+.btn-login:hover {
+  background: var(--gold-light);
+}
+
+.btn-signin {
+  background: rgba(120, 120, 120, 0.638);
+  color: #0a0f1c;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 20px;
+  transition: background 0.2s;
+}
+
+.btn-signin:hover {
+  background: rgba(177, 176, 176, 0.638);
+}
+
+.cta {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  transition: all 0.2s;
+}
+
+.cta:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Admin Buttons */
+.btn-add {
+  background: var(--gold);
+  color: #0a0f1c;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.btn-edit {
+  background: #3a4455;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.btn-delete {
+  background: var(--red-alert);
+  color: white;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.btn-add:hover, .btn-edit:hover, .btn-delete:hover {
+  opacity: 0.85;
+}
+
+.admin-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-btn-secondary:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(208, 169, 63, 0.05);
+}
+
+.admin-btn-danger {
+  background: transparent;
+  border: 1px solid var(--red-alert);
+  color: var(--red-alert);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-btn-danger:hover {
+  background: rgba(184, 50, 50, 0.1);
+}
+
+.btn-small {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+}
+
+.btn-large {
+  padding: 14px 28px;
+  font-size: 1rem;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.flex-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-muted);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-select {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.resource-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 10px 0;
+}
+
+.mission-objective-preview {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 10px 0;
+  line-height: 1.5;
+}

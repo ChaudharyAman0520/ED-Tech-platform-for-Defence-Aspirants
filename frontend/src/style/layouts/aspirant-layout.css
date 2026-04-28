@@ -1,0 +1,68 @@
+/* Aspirant Layout */
+
+.aspirant-root {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-deep);
+}
+
+.aspirant-sidebar {
+  width: 260px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  height: 100vh;
+}
+
+.aspirant-sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-nav {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.nav-link.active {
+  background: rgba(208, 169, 63, 0.12);
+  color: var(--gold);
+}
+
+.aspirant-main {
+  flex: 1;
+  margin-left: 260px;
+}
+
+.aspirant-header {
+  padding: 16px 32px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.aspirant-content {
+  padding: 32px;
+}

@@ -1,7 +1,8 @@
 package com.indianarmy.info_platform.auth;
 
-import com.indianarmy.info_platform.entity.*;
-import com.indianarmy.info_platform.repository.UserRepository;
+import com.indianarmy.info_platform.missions.entity.Role;
+import com.indianarmy.info_platform.user.entity.User;
+import com.indianarmy.info_platform.user.repository.UserRepository;
 import com.indianarmy.info_platform.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

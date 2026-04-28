@@ -1,3 +1,4 @@
+/* PAGE */
 #login-page {
   position: relative;
   height: 100vh;
@@ -7,10 +8,9 @@
   overflow: hidden;
 }
 
+/* VIDEO */
 .bg-video {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -21,6 +21,7 @@
   animation: slowZoom 12s ease-in-out infinite alternate;
 }
 
+/* OVERLAY */
 .video-overlay {
   position: absolute;
   inset: 0;
@@ -29,16 +30,17 @@
   background:
     radial-gradient(
       circle at center,
-      rgba(6, 10, 15, 0.15) 0%,  
-      rgba(6, 10, 15, 0.65) 80%   
+      rgba(6, 10, 15, 0.15),
+      rgba(6, 10, 15, 0.65)
     ),
-        linear-gradient(
+    linear-gradient(
       to bottom,
       rgba(0, 20, 40, 0.3),
       rgba(6, 10, 15, 0.8)
     );
 }
 
+/* LOGIN BOX */
 .login-box {
   position: relative;
   z-index: 2;
@@ -55,25 +57,29 @@
   box-shadow: 0 0 50px rgba(0,0,0,0.7);
 }
 
+/* TITLE */
 .login-title {
   font-family: var(--font-display);
-  font-size: 2.5rem;
-  letter-spacing: 0.1em;
   color: var(--gold);
+  font-size: 2.3rem;
+  letter-spacing: 0.1em;
   margin-bottom: 10px;
 }
 
+/* SUB */
 .login-sub {
-  font-family: var(--font-body);
   color: var(--text-muted);
   margin-bottom: 25px;
+  font-family: var(--font-body);
 }
 
+/* FORM */
 .login-form {
   display: flex;
   flex-direction: column;
 }
 
+/* INPUT GROUP */
 .input-group {
   margin-bottom: 18px;
 }
@@ -90,11 +96,11 @@
 .input-group input {
   width: 100%;
   padding: 12px;
+  margin-top: 5px;
 
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-primary);
-
   font-family: var(--font-body);
   transition: all 0.25s;
 }
@@ -105,8 +111,9 @@
   box-shadow: 0 0 8px rgba(208,169,63,0.4);
 }
 
+/* BUTTON */
 .login-btn {
-  margin-top: 15px;
+  margin-top: 20px;
   padding: 12px;
 
   background: var(--gold);
@@ -115,7 +122,7 @@
 
   font-family: var(--font-ui);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 
   cursor: pointer;
   transition: all 0.25s;
@@ -125,20 +132,52 @@
   background: var(--gold-light);
 }
 
-.error-text {
-  margin-top: 10px;
-  color: var(--red-alert);
-  font-size: 0.85rem;
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
+/* ERROR TEXT */
+.error-text {
+  color: var(--red-alert);
+  margin-top: 10px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* REGISTER LINK */
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.register-link a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.register-link a:hover {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
+
+/* ANIMATION */
 @keyframes slowZoom {
   from { transform: scale(1); }
   to { transform: scale(1.08); }
 }
 
+/* MOBILE */
 @media (max-width: 768px) {
   .login-box {
     width: 90%;
     padding: 30px;
+  }
+  
+  .login-title {
+    font-size: 1.8rem;
   }
 }

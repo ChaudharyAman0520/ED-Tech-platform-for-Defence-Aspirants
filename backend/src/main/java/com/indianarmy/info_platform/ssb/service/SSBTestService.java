@@ -6,7 +6,6 @@ import com.indianarmy.info_platform.ssb.repository.SSBTestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,37 +15,39 @@ public class SSBTestService {
     private final SSBTestRepository repository;
 
     public List<SSBTestResponse> getAll() {
-
-        List<SSBTest> list = repository.findAll();
-        List<SSBTestResponse> responseList = new ArrayList<>();
-
-        for (SSBTest test : list) {
-            SSBTestResponse response = new SSBTestResponse(
-                    test.getId(),
-                    test.getTestName(),
-                    test.getDescription(),
-                    test.getTips(),
-                    test.getStage().getStageName()
-            );
-            responseList.add(response);
-        }
-
-        return responseList;
+        return repository.findAll()
+                .stream()
+                .map(test -> new SSBTestResponse(
+                        test.getId(),
+                        test.getTestName(),
+                        test.getDescription(),
+                        test.getTips(),
+                        test.getStage().getStageName()
+                ))
+                .toList();
     }
 
     public List<SSBTest> getTestsByStage(Long stageId) {
-
-        List<SSBTest> list = repository.findByStageId(stageId);
-        List<SSBTest> result = new ArrayList<>();
-
-        for (SSBTest test : list) {
-            result.add(test);
-        }
-
-        return result;
+        return repository.findByStageId(stageId);
     }
 
     public SSBTest create(SSBTest test) {
         return repository.save(test);
+    }
+
+    public SSBTest updateTest(Long id, SSBTest updatedTest) {
+        SSBTest existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Test not found with id: " + id));
+
+        existing.setTestName(updatedTest.getTestName());
+        existing.setDescription(updatedTest.getDescription());
+        existing.setTips(updatedTest.getTips());
+        existing.setStage(updatedTest.getStage());
+
+        return repository.save(existing);
+    }
+
+    public void deleteTest(Long id) {
+        repository.deleteById(id);
     }
 }

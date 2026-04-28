@@ -5,73 +5,51 @@ import com.indianarmy.info_platform.nda.entity.NDAStudyResource;
 import com.indianarmy.info_platform.nda.repository.NDAStudyResourceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class NDAStudyResourceService {
-
     private final NDAStudyResourceRepository repository;
 
     public List<NDAStudyResourceResponse> getAll() {
-
-        List<NDAStudyResource> list = repository.findAll();
-        List<NDAStudyResourceResponse> responseList = new ArrayList<>();
-
-        for (NDAStudyResource res : list) {
-            NDAStudyResourceResponse response = new NDAStudyResourceResponse(
-                    res.getId(),
-                    res.getTitle(),
-                    res.getDescription(),
-                    res.getUrl(),
-                    res.getResourceType(),
-                    res.getSubject().getName()
-            );
-            responseList.add(response);
-        }
-
-        return responseList;
+        return repository.findAll()
+                .stream()
+                .map(res -> new NDAStudyResourceResponse(
+                        res.getId(),
+                        res.getTitle(),
+                        res.getDescription(),
+                        res.getUrl(),
+                        res.getResourceType(),
+                        res.getSubject() != null ? res.getSubject().getName() : "No Subject"  // ✅ Fixed null check
+                ))
+                .toList();
     }
 
-    public NDAStudyResource create(NDAStudyResource resource) {
+    public NDAStudyResource create(@RequestBody NDAStudyResource resource) {
         return repository.save(resource);
     }
 
-    public NDAStudyResource update(Long id, NDAStudyResource updated) {
-
-        Optional<NDAStudyResource> optional = repository.findById(id);
-
-        if (!optional.isPresent()) {
-            throw new RuntimeException("Not found");
-        }
-
-        NDAStudyResource existing = optional.get();
-
+    public NDAStudyResource update(@PathVariable Long id,
+                                   @RequestBody NDAStudyResource updated) {
+        NDAStudyResource existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
         existing.setTitle(updated.getTitle());
         existing.setDescription(updated.getDescription());
         existing.setUrl(updated.getUrl());
         existing.setResourceType(updated.getResourceType());
         existing.setSubject(updated.getSubject());
-
         return repository.save(existing);
     }
 
-    public void delete(Long id) {
+    public void delete(@PathVariable Long id) {
         repository.deleteById(id);
     }
 
     public List<NDAStudyResource> getBySubject(Long subjectId) {
-
-        List<NDAStudyResource> list = repository.findBySubjectId(subjectId);
-        List<NDAStudyResource> result = new ArrayList<>();
-
-        for (NDAStudyResource res : list) {
-            result.add(res);
-        }
-
-        return result;
+        return repository.findBySubjectId(subjectId);
     }
 }

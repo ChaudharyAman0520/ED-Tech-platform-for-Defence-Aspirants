@@ -1,15 +1,20 @@
 import { Navigate } from "react-router-dom";
-import { getUserFromToken } from "../utils/jwt";
 
-const ProtectedRoute = ({ children, roleRequired }) => {
-    const user = getUserFromToken();
+export default function ProtectedRoute({ children, roleRequired }) {
+  const token = localStorage.getItem("token");
 
-    if (!user) return <Navigate to="/login" />;
+  if (!token) return <Navigate to="/login" />;
 
-    if (roleRequired && user.role !== roleRequired) {
-        return <Navigate to="/" />;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+
+    if (roleRequired && payload.role !== roleRequired) {
+      return <Navigate to="/" />;
     }
-    return children;
-};
 
-export default ProtectedRoute;
+    return children;
+  } catch (err) {
+    localStorage.clear();
+    return <Navigate to="/login" />;
+  }
+}

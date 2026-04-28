@@ -1,5 +1,6 @@
-import "../style/Home.css";
+import "../style/pages/home.css";
 import { Link } from "react-router-dom";
+
 function Home() {
   return (
     <div id="home">
@@ -12,23 +13,17 @@ function Home() {
           </div>
         </div>
         <ul className="nav-links">
-          <li><a href="#">Missions</a></li>
-          <li><a href="#">Our Heroes</a></li>
-          <li><a href="#">Elite Forces</a></li>
-          <li><a href="#">War History</a></li>
-          <li><a href="#">Study Hub</a></li>
           
+          <li><Link to="/hall-of-heroes">Our Heroes</Link></li>
+          <li><Link to="/elite-forces">Elite Forces</Link></li>
+          <li><Link to="/study-hub">Basic Info</Link></li>
         </ul>
         <div className="nav-actions">
           <Link to="/login">
-            <button className="btn-login">
-              Login
-            </button>
+            <button className="btn-login">Login</button>
           </Link>
           <Link to="/register">
-            <button className="btn-signin">
-              Register
-            </button>
+            <button className="btn-signin">Register</button>
           </Link>
         </div>
       </nav>
@@ -59,13 +54,14 @@ function Home() {
           </p>
 
           <div className="hero-cta">
-            <button className="cta">Explore History of Armed Forces</button>
+            <Link to="/war-chronicles">
+              <button className="cta">Explore History of Armed Forces</button>
+            </Link>
           </div>
-
         </div>
 
         <div className="hero-image">
-        <img src="/7av-7av-FFJPVyhCutQ-unsplash.jpg" alt="soldier" />        
+          <img src="/7av-7av-FFJPVyhCutQ-unsplash.jpg" alt="soldier" />        
         </div>
       </section>
 
@@ -79,37 +75,37 @@ function Home() {
           <div className="card card-study">
             <h3>Study Hub</h3>
             <p>NDA, CDS & AFCAT prep with structured modules and mock tests.</p>
-            <a href="#" className="card-link">Enter →</a>
+            <Link to="/study-hub" className="card-link">Enter →</Link>
           </div>
 
           <div className="card card-ssb">
             <h3>SSB Battleground</h3>
             <p>Psychology tests, GTO tasks, personal interviews — master every SSB stage.</p>
-            <a href="#" className="card-link">Enter →</a>
+            <Link to="/ssb-guide" className="card-link">Enter →</Link>
           </div>
 
           <div className="card card-history">
             <h3>War Chronicles</h3>
             <p>Relive India's glorious military history — wars, operations, and turning points.</p>
-            <a href="#" className="card-link">Enter →</a>
+            <Link to="/war-chronicles" className="card-link">Enter →</Link>
           </div>
 
           <div className="card card-heroes">
             <h3>Hall of Heroes</h3>
             <p>Tributes to Param Vir Chakra & Maha Vir Chakra awardees — the immortal ones.</p>
-            <a href="#" className="card-link">Enter →</a>
+            <Link to="/hall-of-heroes" className="card-link">Enter →</Link>
           </div>
 
           <div className="card card-forces">
             <h3>Elite Forces</h3>
             <p>PARA SF, MARCOS, Garud — discover India's most lethal special operations units.</p>
-            <a href="#" className="card-link">Enter →</a>
+            <Link to="/elite-forces" className="card-link">Enter →</Link>
           </div>
 
           <div className="card card-current">
             <h3>Defence Intel</h3>
             <p>Current affairs, defence acquisitions, strategic updates — stay mission-ready.</p>
-            <a href="#" className="card-link">Enter →</a>
+            <Link to="/defence-intel" className="card-link">Enter →</Link>
           </div>
         </div>
       </section>
@@ -134,4 +130,4 @@ function Home() {
   );
 }
 
-export default Home;  
+export default Home;

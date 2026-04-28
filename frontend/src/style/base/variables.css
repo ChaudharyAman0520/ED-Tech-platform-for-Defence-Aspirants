@@ -1,0 +1,32 @@
+/* Theme Variables - Military/Gold Theme */
+
+:root {
+  /* Colors */
+  --gold: #d0a93f;
+  --gold-light: #f0cc6e;
+  --gold-dark: #b8922a;
+  --bg-deep: #060a0f;
+  --bg-panel: #0c1320;
+  --bg-card: #101a28;
+  --border: rgba(139, 154, 70, 0.25);
+  --border-light: rgba(139, 154, 70, 0.15);
+  --text-primary: #e8eaf0;
+  --text-muted: #7a8a9a;
+  --red-alert: #b83232;
+  
+  /* Fonts */
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-ui: 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}

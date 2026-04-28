@@ -40,4 +40,17 @@ public class SSBTestController {
     public SSBTest create(@RequestBody SSBTest test) {
         return service.create(test);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public SSBTest update(@PathVariable Long id, @RequestBody SSBTest test) {
+        return service.updateTest(id, test);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public String deleteTest(@PathVariable Long id) {
+        service.deleteTest(id);
+        return "Test deleted successfully";
+    }
 }

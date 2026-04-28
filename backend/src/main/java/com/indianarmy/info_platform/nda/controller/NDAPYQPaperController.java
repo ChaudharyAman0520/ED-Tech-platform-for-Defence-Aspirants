@@ -4,6 +4,7 @@ import com.indianarmy.info_platform.nda.dto.NDAPYQPaperResponse;
 import com.indianarmy.info_platform.nda.entity.NDAPYQPaper;
 import com.indianarmy.info_platform.nda.service.NDAPYQPaperService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,5 +47,16 @@ public class NDAPYQPaperController {
     @GetMapping("/subject/{subjectId}")
     public List<NDAPYQPaper> getBySubject(@PathVariable Long subjectId) {
         return service.getBySubject(subjectId);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePYQ(@PathVariable Long id) {
+        try {
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
