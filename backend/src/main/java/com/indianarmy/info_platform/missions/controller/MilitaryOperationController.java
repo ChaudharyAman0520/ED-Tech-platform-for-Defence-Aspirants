@@ -18,7 +18,6 @@ public class MilitaryOperationController {
         this.service = service;
     }
 
-    // PUBLIC (both admin & aspirant)
     @PreAuthorize("hasAnyRole('ADMIN','ASPIRANT')")
     @GetMapping
     public List<MilitaryOperation> getAllOperations() {
@@ -31,20 +30,17 @@ public class MilitaryOperationController {
         return service.getOperationById(id);
     }
 
-    // ADMIN ONLY
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public MilitaryOperation createOperation(@RequestBody MilitaryOperation operation) {
         return service.save(operation);
     }
 
-    // ✅ ADD THIS - UPDATE OPERATION
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public MilitaryOperation updateOperation(@PathVariable Long id, @RequestBody MilitaryOperation operation) {
         return service.updateOperation(id, operation);
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")

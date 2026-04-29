@@ -15,31 +15,34 @@ public class MilitaryOperationService {
         this.repository = repository;
     }
 
-    // List page
     public List<MilitaryOperation> getAllOperations() {
         return repository.findAll();
     }
 
-    // Detail page
     public MilitaryOperation getOperationById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Operation not found with id: " + id));
+        MilitaryOperation operation = repository.findById(id).orElse(null);
+
+        if (operation == null) {
+            throw new RuntimeException("Operation not found with id: " + id);
+        }
+
+        return operation;
     }
 
     public List<MilitaryOperation> getFeaturedOperations() {
         return repository.findByFeaturedTrue();
     }
 
-    // Create operation
     public MilitaryOperation save(MilitaryOperation operation) {
         return repository.save(operation);
     }
 
-
     public MilitaryOperation updateOperation(Long id, MilitaryOperation updatedOperation) {
-        MilitaryOperation existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Operation not found with id: " + id));
+        MilitaryOperation existing = repository.findById(id).orElse(null);
+
+        if (existing == null) {
+            throw new RuntimeException("Operation not found with id: " + id);
+        }
 
         existing.setOperationName(updatedOperation.getOperationName());
         existing.setYear(updatedOperation.getYear());
@@ -52,9 +55,12 @@ public class MilitaryOperationService {
     }
 
     public void deleteOperation(Long id) {
-        if (!repository.existsById(id)) {
+        boolean exists = repository.existsById(id);
+
+        if (!exists) {
             throw new RuntimeException("Operation not found with id: " + id);
         }
+
         repository.deleteById(id);
     }
 }

@@ -28,21 +28,35 @@ public class QuestionService {
     }
 
     public Question getQuestionById(Long id) {
-        return questionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+        Question question = questionRepository.findById(id).orElse(null);
+
+        if (question == null) {
+            throw new RuntimeException("Question not found");
+        }
+
+        return question;
     }
 
     public Question createQuestion(Question question) {
         if (question.getSubject() != null && question.getSubject().getId() != null) {
-            NDASubject subject = subjectRepository.findById(question.getSubject().getId())
-                    .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+            NDASubject subject = subjectRepository
+                    .findById(question.getSubject().getId())
+                    .orElse(null);
+
+            if (subject == null) {
+                throw new RuntimeException("Subject not found");
+            }
+
             question.setSubject(subject);
         }
+
         return questionRepository.save(question);
     }
 
     public Question updateQuestion(Long id, Question updated) {
         Question existing = getQuestionById(id);
+
         existing.setText(updated.getText());
         existing.setOptionA(updated.getOptionA());
         existing.setOptionB(updated.getOptionB());
@@ -51,20 +65,25 @@ public class QuestionService {
         existing.setCorrectAnswer(updated.getCorrectAnswer());
         existing.setDifficulty(updated.getDifficulty());
         existing.setMarks(updated.getMarks());
+
         if (updated.getSubject() != null && updated.getSubject().getId() != null) {
             existing.setSubject(updated.getSubject());
         }
+
         return questionRepository.save(existing);
     }
 
-    @Transactional
     public void deleteQuestion(Long id) {
-        Question question = questionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
+        Question question = questionRepository.findById(id).orElse(null);
+
+        if (question == null) {
+            throw new RuntimeException("Question not found with id: " + id);
+        }
 
         // Delete all user answers referencing this question
         List<UserAnswer> answers = userAnswerRepository.findByQuestionId(id);
-        if (!answers.isEmpty()) {
+
+        if (answers != null && !answers.isEmpty()) {
             userAnswerRepository.deleteAll(answers);
         }
 

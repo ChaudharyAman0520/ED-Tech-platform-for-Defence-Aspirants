@@ -38,9 +38,20 @@ export default function TakeTest() {
 
   useEffect(() => {
     if (timeLeft === 0 && !submitted && attemptId) {
-      handleSubmit(true);
+      const autoSubmit = async () => {
+        try {
+          await submitAttempt(attemptId, answers);
+          setSubmitted(true);
+          alert("Time is up. Test auto-submitted! View results in My Results.");
+          navigate("/my-results");
+        } catch (err) {
+          console.error(err);
+          alert("Submit failed");
+        }
+      };
+      autoSubmit();
     }
-  }, [timeLeft, submitted, attemptId]);
+  }, [timeLeft, submitted, attemptId, answers, navigate]);
 
   const handleAnswer = (questionId, answer) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));

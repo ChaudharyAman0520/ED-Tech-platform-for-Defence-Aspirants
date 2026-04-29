@@ -57,10 +57,16 @@ public class AttemptController {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid authorization header");
         }
+
         String token = authHeader.substring(7);
         String email = jwtService.extractEmail(token);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found for token"));
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            throw new RuntimeException("User not found for token");
+        }
+
         return user.getId();
     }
 }

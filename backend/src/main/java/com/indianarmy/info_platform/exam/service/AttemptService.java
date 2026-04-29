@@ -25,15 +25,25 @@ public class AttemptService {
     private final UserRepository userRepository;
     private final TestService testService;
 
-    @Transactional
     public Attempt startAttempt(Long userId, Long testId) {
-        return attemptRepository.findByUserIdAndTestIdAndCompletedAtIsNull(userId, testId)
-                .orElseGet(() -> createAttempt(userId, testId));
+        Attempt attempt = attemptRepository
+                .findByUserIdAndTestIdAndCompletedAtIsNull(userId, testId)
+                .orElse(null);
+
+        if (attempt != null) {
+            return attempt;
+        }
+
+        return createAttempt(userId, testId);
     }
 
     private Attempt createAttempt(Long userId, Long testId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
         Test test = testService.getTestById(testId);
 
         if (test.getQuestions() == null || test.getQuestions().isEmpty()) {
@@ -49,10 +59,12 @@ public class AttemptService {
         return attemptRepository.save(attempt);
     }
 
-    @Transactional
     public Attempt submitAttempt(Long attemptId, Map<Long, String> answers) {
-        Attempt attempt = attemptRepository.findById(attemptId)
-                .orElseThrow(() -> new RuntimeException("Attempt not found"));
+        Attempt attempt = attemptRepository.findById(attemptId).orElse(null);
+
+        if (attempt == null) {
+            throw new RuntimeException("Attempt not found");
+        }
 
         if (attempt.getCompletedAt() != null) {
             throw new RuntimeException("Attempt already submitted");
@@ -63,8 +75,12 @@ public class AttemptService {
 
         for (Question question : attempt.getTest().getQuestions()) {
             String userAnswer = answers.get(question.getId());
-            boolean isCorrect = userAnswer != null &&
-                    userAnswer.equalsIgnoreCase(question.getCorrectAnswer());
+
+            boolean isCorrect = false;
+            if (userAnswer != null &&
+                    userAnswer.equalsIgnoreCase(question.getCorrectAnswer())) {
+                isCorrect = true;
+            }
 
             UserAnswer userAnswerEntity = UserAnswer.builder()
                     .attempt(attempt)
@@ -77,10 +93,18 @@ public class AttemptService {
             attempt.getAnswers().add(userAnswerEntity);
 
             totalMarks += question.getMarks();
-            if (isCorrect) earnedMarks += question.getMarks();
+            if (isCorrect) {
+                earnedMarks += question.getMarks();
+            }
         }
 
-        int percentage = totalMarks == 0 ? 0 : (int) ((double) earnedMarks / totalMarks * 100);
+        int percentage;
+        if (totalMarks == 0) {
+            percentage = 0;
+        } else {
+            percentage = (int) ((double) earnedMarks / totalMarks * 100);
+        }
+
         attempt.setScore(earnedMarks);
         attempt.setPercentage(percentage);
         attempt.setCompletedAt(LocalDateTime.now());

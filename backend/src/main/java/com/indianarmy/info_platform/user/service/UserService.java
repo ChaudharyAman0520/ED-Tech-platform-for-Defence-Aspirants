@@ -9,8 +9,8 @@ import com.indianarmy.info_platform.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,20 +19,32 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<User> users = userRepository.findAll();
+        List<UserDTO> result = new ArrayList<UserDTO>();
+
+        for (User user : users) {
+            result.add(convertToDTO(user));
+        }
+
+        return result;
     }
 
     public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + id);
+        }
+
         return convertToDTO(user);
     }
 
     public UserDTO updateUserRole(Long id, String roleStr) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + id);
+        }
 
         Role newRole = Role.valueOf(roleStr.toUpperCase());
         user.setRole(newRole);
@@ -41,23 +53,38 @@ public class UserService {
     }
 
     public UserDTO updateUser(Long id, UserUpdateRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElse(null);
 
-        if (request.getName() != null) user.setName(request.getName());
-        if (request.getRole() != null) user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + id);
+        }
+
+        if (request.getName() != null) {
+            user.setName(request.getName());
+        }
+
+        if (request.getRole() != null) {
+            user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+        }
 
         return convertToDTO(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElse(null);
 
-        // Prevent deleting the last admin
-        long adminCount = userRepository.findAll().stream()
-                .filter(u -> u.getRole() == Role.ADMIN)
-                .count();
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + id);
+        }
+
+        List<User> users = userRepository.findAll();
+        long adminCount = 0;
+
+        for (User u : users) {
+            if (u.getRole() == Role.ADMIN) {
+                adminCount++;
+            }
+        }
 
         if (user.getRole() == Role.ADMIN && adminCount <= 1) {
             throw new RuntimeException("Cannot delete the only admin user");
@@ -70,14 +97,25 @@ public class UserService {
         List<User> users = userRepository.findAll();
 
         long totalUsers = users.size();
-        long adminCount = users.stream().filter(u -> u.getRole() == Role.ADMIN).count();
-        long aspirantCount = users.stream().filter(u -> u.getRole() == Role.ASPIRANT).count();
+        long adminCount = 0;
+        long aspirantCount = 0;
+        long recentCount = 0;
 
-        // Recent registrations (last 30 days)
-        long recentCount = users.stream()
-                .filter(u -> u.getCreatedAt() != null &&
-                        u.getCreatedAt().isAfter(java.time.LocalDateTime.now().minusDays(30)))
-                .count();
+        java.time.LocalDateTime threshold = java.time.LocalDateTime.now().minusDays(30);
+
+        for (User u : users) {
+            if (u.getRole() == Role.ADMIN) {
+                adminCount++;
+            }
+
+            if (u.getRole() == Role.ASPIRANT) {
+                aspirantCount++;
+            }
+
+            if (u.getCreatedAt() != null && u.getCreatedAt().isAfter(threshold)) {
+                recentCount++;
+            }
+        }
 
         return new UserStatsDTO(totalUsers, adminCount, aspirantCount, recentCount);
     }
